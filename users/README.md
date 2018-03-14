@@ -46,7 +46,20 @@ There is a Makefile where the nested commands are in place to execute the applic
     
         make run-local ( stop with Ctrl+C)
 
-###Using Docker
+### Using Docker
+At the users folder level run:
+
+                 docker build -t user-service:v1 --compress .
+
+That command will create the user-service:v1 image
+
+Then got to the deploy/docker folder and get any of the docker-compose* and put it on the users folder and run_
+
+       docker-compose -f docker-compose-*.yml up
+
+For docker-compose-sqlite, you should copy the Dockerfile-sqlite also on the users root folder and then run:
+
+    docker-compose -f docker-compose-sqlite.yml up
 
 ### Using minikube
  - Prequequisites Docker installed
@@ -70,10 +83,15 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/?#install-kubectl-binary-
  
           docker build -t user-service:v1 --compress .
  
-After this you are ready to deploy the service and database(postgres) into kuberntes
+After this you are ready to deploy the service and database(postgres) into kubernetes
 
-Go to the folder users/deploy 
+Run: 
 
+    make kub_deploy
+    
+For remove the kubernetes deploy run:
 
+    make kub_undeploy
 
-   Basic YWRtaW46XHg4Yl1ePlx4ODFceDgxXHg5ZFx4OGRceGM3Mw==
+ // TODO: Add the docs folder and the files documentation using sphinx
+ // TODO: Get tox working again.
