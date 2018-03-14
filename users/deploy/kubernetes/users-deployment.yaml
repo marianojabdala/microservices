@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users
+  labels:
+    app: users
+spec:
+  selector:
+    matchLabels:
+      app: users
+      tier: api
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: users
+        tier: api
+    spec:
+      containers:
+      - image: user-service:v1
+        name: users
+        env:
+        - name: DB_HOST
+          value: users-postgres
+        - name: DB_USER
+          value: postgres
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-pass
+              key: password
+        ports:
+        - containerPort: 8000
+          name: users
+      restartPolicy: Always
+

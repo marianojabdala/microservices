@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-postgres
+  labels:
+    app: users
+spec:
+  selector:
+    matchLabels:
+      app: users
+      tier: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: users
+        tier: postgres
+    spec:
+      containers:
+      - image: postgres:10.2-alpine
+        name: postgres
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-pass
+              key: password
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - name: postgres-persitent-storage
+          mountPath: /var/lib/postgresql/data
+      restartPolicy: Always
+      volumes:
+      - name: postgres-persitent-storage
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim

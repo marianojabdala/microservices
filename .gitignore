@@ -1,0 +1,11 @@
+.idea
+*cache*
+*migrations*
+*pyc
+*sqlite
+.coverage
+.tox
+.rope*
+*data*
+*mysql*
+tmp

@@ -1,0 +1,313 @@
+{
+	"info": {
+		"name": "Users",
+		"_postman_id": "57ca4d0e-de0e-98c1-7474-422f961bd7e0",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tests",
+			"description": "",
+			"item": [
+				{
+					"name": "/register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "671f6712-91c0-49e3-8289-cb364175e7f6",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has user Id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var id = jsonData[\"users\"][\"_id\"];",
+									"    var name = jsonData[\"users\"][\"name\"];",
+									"    var admin = jsonData[\"users\"][\"admin\"];",
+									"    var username = pm.environment.get(\"username\");",
+									"    ",
+									"    pm.expect(name).to.be.eq(username);",
+									"    pm.expect(admin).to.be.eq(false)",
+									"    ",
+									"    pm.environment.set(\"user_id\", id)",
+									"});",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e7d50253-fbbd-410a-988f-127416bbfb55",
+								"type": "text/javascript",
+								"exec": [
+									"var usernameRandom=\"Test User-\" + Math.round((Math.random(1) * 10));",
+									"pm.environment.unset(\"username\"); ",
+									"pm.environment.set(\"username\",usernameRandom); "
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"{{username}}\",\n\t\"password\": \"{{password}}\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "678717d2-9423-4e2b-986d-0fc2f33be185",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Expect access_token to be in response\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"access_token\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"pm.test(\"Set access_token variable\", function() {",
+									"   var jsonData = pm.response.json();",
+									"   pm.environment.unset(\"token\"); ",
+									"   pm.environment.set(\"token\", \"jahp \" + jsonData.access_token); ",
+									"}); "
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\":\"{{username}}\",\n\t\"password\": \"{{password}}\"\n\t\n}"
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "046068c6-2ace-4021-b216-d68524759cec",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/users/{{user_id}}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4ee35d21-b222-4ab3-8757-612b36ddd9fb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Response has user Id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    console.log(jsonData[\"user\"]);",
+									"    var id = +jsonData[\"user\"][\"_id\"];",
+									"    var environment_user_id = +pm.environment.get(\"user_id\"); ",
+									"    pm.expect(id).to.be.eq(environment_user_id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/users/{{user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/users/{{user_id}}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "784c7abf-b72c-4783-a87e-3e185ef1c59a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Response has user Id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isAdmin = jsonData[\"user\"][\"admin\"];",
+									"    pm.expect(isAdmin).to.be.eq(true);",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"_id\": {{user_id}},\n\t\"name\":\"{{username}}\",\n\t\"password\": \"{{password}}\",\n\t\"isAdmin\" : \"True\"\n\t\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users/{{user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/users/{{user_id}}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a15f8036-b980-4e3f-a0b1-4f169a0a3a1f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/users/{{user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

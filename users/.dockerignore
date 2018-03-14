@@ -1,0 +1,11 @@
+.git
+.gitignore
+.ropeproject
+Dockerfile
+Dockerfile-sqlite
+db-data
+db-mysql
+docker-compose*
+migrations
+*yaml
+tmp

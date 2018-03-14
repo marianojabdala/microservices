@@ -1,0 +1,25 @@
+version: "3"
+services:
+  db:
+    container_name: "sqlite"
+    image: db-sqlite
+    volumes:
+      - ./microservices.sqlite:/db/db.sqlite
+    networks:
+      - backend
+
+  users:
+    container_name: "Users"
+    image: micro-users:v2
+    build: .
+    ports:
+      - 5000:8000
+    networks:
+      - backend
+    links:
+      - db
+    depends_on:
+      - db
+
+networks:
+  backend:
