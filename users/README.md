@@ -94,5 +94,3 @@ For remove the kubernetes deploy run:
     make kub_undeploy
 
  // TODO: Add the docs folder and the files documentation using sphinx.
- 
- // TODO: Get tox working again.
