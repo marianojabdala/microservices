@@ -54,8 +54,9 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX_TEST')}{Config.PATH}/tests/" \
+    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX_TEST')}{os.getenv('TMP_DIR')}/" \
                               f"{os.getenv('TEST_DATABASE')}{os.getenv('DB_SUFIX_TEST')}"
+
     DEBUG = True
 
 

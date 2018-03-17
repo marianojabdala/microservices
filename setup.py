@@ -15,9 +15,9 @@ setup(
     packages=find_packages(),
     long_description=read('users/README.md'),
     classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Topic :: Utilities",
-        "License :: OSI Approved :: BSD License",
+        "Development Status :: 1 - Alpha",
+        "Topic :: API",
+        "License :: Apache License",
     ],
     data_files=[("users/README.md")],
     entry_points={

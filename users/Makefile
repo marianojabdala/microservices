@@ -1,6 +1,8 @@
 export APP_NAME=microservices
 
-TEST_DATABASE_NAME=tests/tests-microservices.sqlite
+export TMP_DIR=$(shell mktemp -d)
+
+TEST_DATABASE_NAME=$(shell echo $(TMP_DIR))/tests-microservices.sqlite
 
 MAKEFLAGS += --no-print-directory
 
@@ -30,7 +32,8 @@ ci:
 cleanup:
 	@echo ******Shutting down server******
 	pkill gunicorn
-	rm $(TEST_DATABASE_NAME)
+	rm -rf $(TEST_DATABASE_NAME)
+
 
 docs:
 	sphinx-apidoc -f -o ../docs/source .; cd ..; make html
