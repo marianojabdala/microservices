@@ -1,9 +1,9 @@
-#Flask + Docker + Kubernetes + virtualenv
+# Flask + Docker + Kubernetes + virtualenv
 
 First attempt to create a micro Architecture that create a user api(CRUD) that
 could be deployed using docker-compose and kubernetes(minikube) also runs locally.
 
-###Installation
+### Installation
 
  - Install python virtualenv from: https://github.com/pyenv/pyenv#installation
 
@@ -32,7 +32,7 @@ Eg.
  
         pip install -r requirements.txt
 
-###Usage
+### Usage
 There is a Makefile where the nested commands are in place to execute the application
 
 - Run it as production
@@ -45,7 +45,7 @@ There is a Makefile where the nested commands are in place to execute the applic
 - Run it as development(reload the changes you make on the code.)
     
         make run-local ( stop with Ctrl+C)
-
+  
 ### Using Docker
 At the users folder level run:
 
