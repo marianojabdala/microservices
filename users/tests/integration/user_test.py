@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+""" This modules is about to test the user API."""
 import unittest
-import json
+from json import dumps as json_dump, loads as json_load
 from users.tests.base import BaseTestCase
-
 
 class UsersTestCase(BaseTestCase):
     """This class represents the Users test case"""
@@ -14,11 +14,12 @@ class UsersTestCase(BaseTestCase):
             "password": "12345"
         }
 
-        res = self.client().post('/users', data=json.dumps(user), headers={"Content-Type": "application/json"})
+        res = self.client().post('/users', data=json_dump(user),
+                                 headers={"Content-Type": "application/json"})
         self.assertEqual(res.status_code, 201)
-        users = json.loads(res.data)["users"]
+        users = json_load(res.data)["users"]
 
-        self.assertEqual(users["_id"], 1 , "The user id is None")
+        self.assertEqual(users["_id"], 1, "The user id is None")
         self.assertEqual(users["name"], "test", "The name is not the same")
         self.assertEqual(users["admin"], False, "The new user shouldn't be admin")
         self.assertEqual(users["uri"], "/users/1", "The uri doesn't match")
@@ -28,18 +29,18 @@ class UsersTestCase(BaseTestCase):
     def test_api_can_get_all_users(self):
         """Test API can get a users (GET request)."""
         user = {
-                "name": "test",
-                "password": "12345"
+            "name": "test",
+            "password": "12345"
         }
-        res = self.client().post('/users', data=json.dumps(user),
-                               headers={"Content-Type":"application/json"})
+        res = self.client().post('/users', data=json_dump(user),
+                                 headers={"Content-Type":"application/json"})
         self.assertEqual(res.status_code, 201)
 
-        auth = self.get_token(json.dumps({"username": user["name"], "password": user["password"]}))
+        auth = self.get_token(json_dump({"username": user["name"], "password": user["password"]}))
 
         headers = {**auth, **{"Content-Type": "application/json"}}
 
-        res = self.client().get('/users', headers = headers)
+        res = self.client().get('/users', headers=headers)
 
         self.assertEqual(res.status_code, 200)
         self.assertIn("name", str(res.data))
@@ -51,12 +52,12 @@ class UsersTestCase(BaseTestCase):
             "name": "test",
             "password": "12345"
         }
-        rv = self.client().post('/users', data=json.dumps(user),
-                              headers={"Content-Type": "application/json"})
-        self.assertEqual(rv.status_code, 201)
-        result_in_json = json.loads(rv.data.decode('utf-8').replace("'", "\""))["users"]
+        response = self.client().post('/users', data=json_dump(user),
+                                      headers={"Content-Type": "application/json"})
+        self.assertEqual(response.status_code, 201)
+        result_in_json = json_load(response.data.decode('utf-8').replace("'", "\""))["users"]
 
-        auth = self.get_token(json.dumps({"username": user["name"], "password":user["password"]}))
+        auth = self.get_token(json_dump({"username": user["name"], "password":user["password"]}))
 
         result = self.client().get(
             '/users/{}'.format(result_in_json['_id']), headers=auth)
@@ -64,17 +65,19 @@ class UsersTestCase(BaseTestCase):
         self.assertIn(user["name"], str(result.data))
 
     def test_user_can_be_edited(self):
-        user = {'name': 'Test User 2', "password": "123455"}
 
         """Test API can edit an existing user. (PUT request)"""
-        rv = self.client().post('/users', data=json.dumps(user),
-                                headers={"Content-Type": "application/json"})
+        user = {'name': 'Test User 2', "password": "123455"}
 
-        users = json.loads(rv.data)["users"]
 
-        self.assertEqual(rv.status_code, 201)
+        response = self.client().post('/users', data=json_dump(user),
+                                      headers={"Content-Type": "application/json"})
 
-        auth = self.get_token(json.dumps({"username": user["name"], "password": user["password"]}))
+        users = json_load(response.data)["users"]
+
+        self.assertEqual(response.status_code, 201)
+
+        auth = self.get_token(json_dump({"username": user["name"], "password": user["password"]}))
 
         headers = {**auth, **{"Content-Type": "application/json"}}
 
@@ -88,11 +91,11 @@ class UsersTestCase(BaseTestCase):
 
         }
 
-        rv = self.client().put(
+        response = self.client().put(
             f'/users/{user_id}',
-            data=json.dumps(user_to_update), headers=headers)
+            data=json_dump(user_to_update), headers=headers)
 
-        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         get_result = self.client().get(f'/users/{user_id}', headers=headers)
 
         self.assertEqual(get_result.status_code, 200)
@@ -102,28 +105,28 @@ class UsersTestCase(BaseTestCase):
         """Test API can delete an existing users. (DELETE request)."""
         user = {'name': 'Test User 2', "password": "123456"}
 
-        rv = self.client().post(
+        response = self.client().post(
             '/users',
-            data=json.dumps(user),
+            data=json_dump(user),
             headers={"Content-Type": "application/json"})
 
-        self.assertEqual(rv.status_code, 201)
+        self.assertEqual(response.status_code, 201)
 
-        users = json.loads(rv.data)["users"]
+        users = json_load(response.data)["users"]
 
         user_id = users["_id"]
 
-        auth = self.get_token(json.dumps({"username": user["name"], "password": user["password"]}))
+        auth = self.get_token(json_dump({"username": user["name"], "password": user["password"]}))
 
         headers = {**auth, **{"Content-Type": "application/json"}}
 
-        res = self.client().delete(f'/users/{user_id}',headers=headers)
+        res = self.client().delete(f'/users/{user_id}', headers=headers)
 
         self.assertEqual(res.status_code, 204)
 
-        # Test to see if it exists, should return a 404
+        # Test to see if it exists, should return a 401
         result = self.client().get(f'/users/{user_id}', headers=headers)
-        self.assertEqual(result.status_code, 404)
+        self.assertEqual(result.status_code, 401)
 
 
 

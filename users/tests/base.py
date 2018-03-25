@@ -1,36 +1,41 @@
 # -*- coding: utf-8 -*-
-from users.models import *
+"""Base test class."""
 import json
 import unittest
-from db import db
+from db import DB
 from app import create_app
 
 
 class BaseTestCase(unittest.TestCase):
-    """This class represents the Users test case"""
+    """This class represents the Users test case."""
 
     def setUp(self):
         """Define test variables and initialize app."""
-        self.app = create_app(config_name="testing", db=db)
+        self.app = create_app(config_name="testing")
         self.client = self.app.test_client
 
-        #binds the app to the current context
+        # binds the app to the current context
         with self.app.app_context():
-            db.init_app(self.app)
+            DB.init_app(self.app)
             # create all tables
-            db.create_all()
-
+            DB.create_all()
 
     def get_token(self, body):
+        """
+        Get the jwt token to continue other tests.
 
+        :param body: the username and password to be used.
+        :return:  json: the authorization header to be used.
+        """
         res = self.client().post('/login', data=body,
-                                headers={"Content-Type": "application/json"})
+                                 headers={"Content-Type": "application/json"})
         auth_token = json.loads(res.data)["access_token"]
 
         return {"Authorization": f"jahp {auth_token}"}
+
     def tearDown(self):
-        """teardown all initialized variables."""
+        """Teardown all initialized variables."""
         with self.app.app_context():
             # drop all tables
-            db.session.remove()
-            db.drop_all()
+            DB.session.remove()
+            DB.drop_all()

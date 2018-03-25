@@ -23,6 +23,4 @@ RUN adduser -S app && chown app:nobody -R /app && \
 
 USER app
 
-ENTRYPOINT ["gunicorn" ,"--config", "config.py", "app:app"]
-
-
+ENTRYPOINT ["gunicorn" ,"--config", "config.py", "app:APP"]

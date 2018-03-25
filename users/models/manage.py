@@ -1,17 +1,28 @@
 # -*- coding: utf-8 -*-
+"""
+Generate the manager to be used to the database migrations.
+
+Creates a new command line option 'db' for the migrate command.
+
+Use:
+
+python migrate.py db
+
+"""
 import os
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager  # class for handling a set of commands
 
-from . import *
 from instance import create_app
-from db import db
+from db import DB
 
-app = create_app(config_name=os.getenv('APP_SETTINGS'))
-migrate = Migrate(app, db)
-manager = Manager(app)
+from . import * # pylint: disable=wildcard-import
 
-manager.add_command('db', MigrateCommand)
+APP = create_app(config_name=os.getenv('APP_SETTINGS'), database=DB)
+MIGRATE = Migrate(APP, DB)
+MANAGER = Manager(APP)
+
+MANAGER.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
-    manager.run()
+    MANAGER.run()

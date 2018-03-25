@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""This class is the one ths is send to the frontent.
+r"""
+This class is the one ths is send to the frontend.
 
 Example:
     This could be a postman request or a curl request and will return this dto object as json::
@@ -21,47 +22,49 @@ Example:
 Section breaks are created by resuming unindented text. Section breaks
 are also implicitly created anytime a new section starts.
 
-Attributes:
-    module_level_variable1 (int): Module level variables may be documented in
-        either the ``Attributes`` section of the module docstring, or in an
-        inline docstring immediately following the variable.
-
-        Either form is acceptable, but the two should not be mixed. Choose
-        one convention to document module level variables and be consistent
-        with it.
-
-Todo:
-    * For module TODOs
-    * You have to also use ``sphinx.ext.todo`` extension
-
-.. _Google Python Style Guide:
-   http://google.github.io/styleguide/pyguide.html
-
 """
-
+# pylint: disable=too-few-public-methods
 class UserDto:
+    """User Dto that is send back to the client of the api."""
 
     def __init__(self, user=None):
+        """
+        Construct method.
+
+        :param user: The users to be used or none if we don't have one.
+        """
         if user is not None:
-            self.id = user.id
             self._id = user.id
+            self.id = self._id # pylint: disable=invalid-name
             self.name = user.username
             self.password = user.password
             self.created = user.date_created
-            self.admin = user.isAdmin
+            self.admin = user.is_admin
         else:
-            self.id = -1
+            self._id = -1
+            self.id = self._id # pylint: disable=invalid-name
             self.name = ""
-            self.password =""
-            self.created =""
+            self.password = ""
+            self.created = ""
             self.admin = False
 
     def set_attributes(self, attr):
+        """
+        Set some other attributes to the Dto that could be create without any user.
+
+        :param attr: Some user attributes
+        :return: None
+        """
         self._id = attr["_id"]
-        self.id = attr["_id"]
         self.name = attr["username"]
         self.password = attr["password"]
+        return None
 
     def __repr__(self):
-        return "User=[_id={},username={},password={},admin={}]".format(self._id, self.name, self.password,
-                                                                       self.admin)
+        """
+        Return the user when we use print.
+
+        :return: The user representation
+        """
+        return "User=[_id={},username={},admin={}]".format(self._id, self.name,
+                                                           self.admin)

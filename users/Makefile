@@ -9,34 +9,41 @@ MAKEFLAGS += --no-print-directory
 SHELL=/bin/bash
 
 run:
-	DAEMON=true APP_SETTINGS=production gunicorn --config config.py app:app
+	DAEMON=true APP_SETTINGS=production gunicorn --config config.py app:APP
 
 run-local:
-	APP_SETTINGS=development gunicorn --reload --config config.py app:app
+	APP_SETTINGS=development gunicorn --reload --config config.py app:APP
 
 stop:
 	@echo ******Shutting down server******
 	pkill gunicorn
 
+lint:
+	pylint --ignore=config.py users tests
+
 ci:
-	PYTHONPATH="../" DAEMON=true gunicorn --config tests/config.py test_app:app
+	make lint
+	@echo ******Raising new app for testing******
+	PYTHONPATH="../" DAEMON=true gunicorn --config tests/config.py test_app:APP
 	@echo ******Waiting for app to be ready...******
 	sleep 5
 	@echo ******Running Postman tests******
 	newman run tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json
 	@echo ******Running python integration tests******
 	PYTHONPATH="../" python -m pytest tests/integration -v
-	@echo ******Raising new app for testing******
+	@echo ******Cleaning up******
 	make cleanup
 
 cleanup:
 	@echo ******Shutting down server******
 	pkill gunicorn
-	rm -rf $(TEST_DATABASE_NAME)
+	rm -rf /tmp/tmp.*
 
+clean:
+	@find . -name "__pycache__" | xargs rm -fr
 
 docs:
-	sphinx-apidoc -f -o ../docs/source .; cd ..; make html
+	PYTHONPATH="../" sphinx-apidoc -M -o ../docs/source . tests test_app.py; cd ../docs; PYTHONPATH="../users" make html
 
 kube_setup:
 	 @echo "Be sure you run #eval (minikube docker-env) before kube_deploy or kube_undeploy"
@@ -61,4 +68,4 @@ kube_undeploy:
 	kubectl delete secret postgres-pass
 
 
-.PHONY:run ci run-local kube_deploy kube_undeploy docs
+.PHONY:run ci run-local kube_deploy kube_undeploy docs lint
