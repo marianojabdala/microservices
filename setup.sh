@@ -7,7 +7,7 @@ libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
 xz-utils tk-dev
 
 #Enable route from 8000 to 80
-sudo iptables -t nat -A PREROUTING -p tcp --sport 80 -j --dport REDIRECT 8000
+sudo iptables -t nat -A PREROUTING -p tcp --sport 80 -j REDIRECT --dport 8000
 
 #Install pyenv
 curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
@@ -22,10 +22,13 @@ source $HOME/.bash_profile
 pyenv install 3.6.0
 
 #Creates a new virtual env
-pyenv virtualenv python3
+pyenv virtualenv python-virtual
 
 #Activate new python environment
-pyenv activate python3
+pyenv activate python-virtual
+
+#upgrade pip
+pip install pip --upgrade
 
 #Install the requirements
-pip install -r users/requirements.txt
+pip install -r requirements.txt
