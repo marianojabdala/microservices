@@ -6,9 +6,6 @@ sudo apt-get update && sudo apt-get install -y make build-essential libssl-dev z
 libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
 xz-utils tk-dev
 
-#Enable route from 8000 to 80
-sudo iptables -t nat -A PREROUTING -p tcp --sport 80 -j REDIRECT --dport 8000
-
 #Install pyenv
 curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
