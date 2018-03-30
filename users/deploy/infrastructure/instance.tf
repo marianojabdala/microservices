@@ -1,6 +1,6 @@
 resource "aws_key_pair" "my-ssh-key" {
   key_name = "my-ssh-key"
-  public_key = "${file("${var.PATH_TO_PUBLIC_KEY}")}"
+  public_key = "${file("${var.PUBLIC_KEY}")}"
 }
 
 resource "aws_instance" "users" {
@@ -9,7 +9,7 @@ resource "aws_instance" "users" {
   key_name = "${aws_key_pair.my-ssh-key.key_name}"
 
   # the VPC subnet
-  subnet_id = "${aws_subnet.main-public-1.id}"
+  subnet_id = "${aws_subnet.main-public.id}"
 
   # the security group
   vpc_security_group_ids = ["${aws_security_group.allow-ssh.id}",
@@ -24,6 +24,6 @@ resource "aws_instance" "users" {
 
   connection {
     user = "${var.INSTANCE_USERNAME}"
-    private_key = "${file("${var.PATH_TO_PRIVATE_KEY}")}"
+    private_key = "${file("${var.PRIVATE_KEY}")}"
   }
 }

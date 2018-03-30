@@ -10,9 +10,9 @@ variable "AMIS" {
   }
 }
 
-variable "PATH_TO_PRIVATE_KEY" {
+variable "PRIVATE_KEY" {
   default = "my-ssh-key"
 }
-variable "PATH_TO_PUBLIC_KEY" {
+variable "PUBLIC_KEY" {
   default = "my-ssh-key.pub"
 }
