@@ -9,3 +9,4 @@ docker-compose*
 migrations
 *yaml
 tmp
+.terraform

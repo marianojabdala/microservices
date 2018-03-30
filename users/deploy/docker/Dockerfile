@@ -19,7 +19,8 @@ COPY . /app
 
 RUN adduser -S app && chown app:nobody -R /app && \
     apk del gcc linux-headers musl-dev libffi-dev&& \
-    rm /var/cache/apk/*
+    rm -fr /var/cache/apk/* && \
+    rm -fr /root/.cache
 
 USER app
 
