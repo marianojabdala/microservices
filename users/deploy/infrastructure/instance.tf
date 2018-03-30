@@ -12,10 +12,15 @@ resource "aws_instance" "users" {
   subnet_id = "${aws_subnet.main-public-1.id}"
 
   # the security group
-  vpc_security_group_ids = ["${aws_security_group.allow-ssh.id}"]
+  vpc_security_group_ids = ["${aws_security_group.allow-ssh.id}",
+    "${aws_security_group.allow-http.id}"]
 
   # user data
   user_data = "${data.template_cloudinit_config.cloudinit-users.rendered}"
+
+  tags {
+     Name = "users-service"
+   }
 
   connection {
     user = "${var.INSTANCE_USERNAME}"

@@ -27,6 +27,12 @@ to see what terraform will do and then
 
 to create the infrastructure.
 
+## Login
+
+To enter the new EC2 instance just login with:
+
+      ssh -i my-ssh-key -l ubuntu [output-ip]
+
 ## Notes
 
 To generate the public and private key to be able to ssh to the instance run this command:
