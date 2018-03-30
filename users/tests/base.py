@@ -3,7 +3,7 @@
 import json
 import unittest
 from db import DB
-from app import create_app
+from instance import create_app
 
 
 class BaseTestCase(unittest.TestCase):

@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/marianojabdala/microservices.svg?style=svg)](https://circleci.com/gh/marianojabdala/microservices)
+
 # Flask + Docker + Kubernetes + virtualenv
 
 First attempt to create a micro Architecture that create a user api(CRUD) that

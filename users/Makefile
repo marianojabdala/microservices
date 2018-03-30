@@ -2,7 +2,7 @@ export APP_NAME=microservices
 
 export TMP_DIR=$(shell mktemp -d)
 
-TEST_DATABASE_NAME=$(shell echo $(TMP_DIR))/tests-microservices.sqlite
+export TEST_DATABASE_NAME=$(shell echo $(TMP_DIR))/tests-microservices.sqlite
 
 MAKEFLAGS += --no-print-directory
 
@@ -23,6 +23,12 @@ lint:
 
 ci:
 	make lint
+	PYTHONPATH="../" python -m pytest tests/integration -v
+	@echo ******Cleaning up******
+	make cleanup
+
+ci-with-postman:
+	make ci
 	@echo ******Raising new app for testing******
 	PYTHONPATH="../" DAEMON=true gunicorn --config tests/config.py test_app:APP
 	@echo ******Waiting for app to be ready...******
@@ -30,13 +36,10 @@ ci:
 	@echo ******Running Postman tests******
 	newman run tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json
 	@echo ******Running python integration tests******
-	PYTHONPATH="../" python -m pytest tests/integration -v
-	@echo ******Cleaning up******
-	make cleanup
+	pkill gunicorn
 
 cleanup:
 	@echo ******Shutting down server******
-	pkill gunicorn
 	rm -rf /tmp/tmp.*
 
 clean:
