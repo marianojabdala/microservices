@@ -8,7 +8,8 @@ threads = 1
 errorlog = '-'
 loglevel = 'info'
 accesslog = '-'
-bind="0.0.0.0:5000"
+port=5000 if environ.get("APP_SETTINGS").upper()=="DEVELOPMENT" else 80
+bind="0.0.0.0:" + str(port)
 user = getuid()
 group = getgid()
 daemon = False if environ.get("DAEMON") is None else True

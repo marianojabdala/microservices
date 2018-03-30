@@ -10,3 +10,5 @@
 *mysql*
 tmp
 *egg*
+.terraform
+terraform.tfvars
