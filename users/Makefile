@@ -8,6 +8,9 @@ MAKEFLAGS += --no-print-directory
 
 SHELL=/bin/bash
 
+ALLURE_OUTPUT_PATH=$(PWD)/tests/bdd/allure.output
+
+
 run:
 	DAEMON=true APP_SETTINGS=production gunicorn --config config.py app:APP
 
@@ -20,6 +23,15 @@ stop:
 
 lint:
 	pylint --ignore=config.py users tests
+
+bdd:
+	echo $(ALLURE_OUTPUT_PATH)
+	rm -fr allure.output
+	rm -fr $(ALLURE_OUTPUT_PATH)
+	behave
+	mv allure.output tests/bdd/
+
+	allure serve $(ALLURE_OUTPUT_PATH)
 
 ci:
 	make lint
@@ -72,3 +84,4 @@ kube_undeploy:
 
 
 .PHONY:run ci run-local kube_deploy kube_undeploy docs lint
+.SILENT: bdd
