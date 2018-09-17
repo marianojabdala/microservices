@@ -1,9 +1,11 @@
 FROM python:alpine3.6
 
+LABEL maintainer="marianoabdala@gmail.com"
+
 RUN apk add --update python-dev py-pip gcc linux-headers musl-dev libffi-dev postgresql-dev && \
     mkdir /app
 
-WORKDIR app
+WORKDIR /app
 
 COPY requirements.txt /app
 

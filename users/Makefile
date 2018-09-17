@@ -8,8 +8,11 @@ MAKEFLAGS += --no-print-directory
 
 SHELL=/bin/bash
 
-ALLURE_OUTPUT_PATH=$(PWD)/tests/bdd/allure.output
+BDD_BASE_PATH=$(PWD)/tests/bdd
 
+ALLURE_OUTPUT_PATH=allure.output
+
+ALLURE_REPORT_PATH=$(BDD_BASE_PATH)/allure-report
 
 run:
 	DAEMON=true APP_SETTINGS=production gunicorn --config config.py app:APP
@@ -25,13 +28,10 @@ lint:
 	pylint --ignore=config.py users tests
 
 bdd:
-	echo $(ALLURE_OUTPUT_PATH)
-	rm -fr allure.output
-	rm -fr $(ALLURE_OUTPUT_PATH)
 	behave
-	mv allure.output tests/bdd/
-
-	allure serve $(ALLURE_OUTPUT_PATH)
+	allure generate --clean $(ALLURE_OUTPUT_PATH) -o $(ALLURE_REPORT_PATH)
+	cp $(BDD_BASE_PATH)/categories.json $(ALLURE_REPORT_PATH)
+	allure open $(ALLURE_REPORT_PATH)
 
 ci:
 	make lint
