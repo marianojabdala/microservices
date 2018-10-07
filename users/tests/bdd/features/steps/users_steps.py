@@ -1,5 +1,5 @@
-from behave import given, when, then
 from json import dumps as json_dump, loads as json_load
+from behave import given, when, then
 import sure
 
 @given("The user set the {username} and {password}")
@@ -33,6 +33,5 @@ def step_impl_2(context):
     users.should.be.a('dict')
     users.should.have.key("_id").being.equal(1)
     users.should.have.key("name").being.equal(context.username)
-    users.should.have.key("admin").shouldnt.be.ok
+    users.should.have.key("admin").should.be.falsy
     users.should.have.key("uri").being.equal("/users/1")
-w

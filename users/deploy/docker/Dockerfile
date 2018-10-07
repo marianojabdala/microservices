@@ -15,8 +15,6 @@ ARG APP_SETTINGS=production
 
 ENV APP_SETTINGS $APP_SETTINGS
 
-EXPOSE 8000
-
 COPY . /app
 
 RUN adduser -S app && chown app:nobody -R /app && \
@@ -25,5 +23,7 @@ RUN adduser -S app && chown app:nobody -R /app && \
     rm -fr /root/.cache
 
 USER app
+
+EXPOSE 5000
 
 ENTRYPOINT ["gunicorn" ,"--config", "config.py", "app:APP"]

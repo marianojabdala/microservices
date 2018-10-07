@@ -25,7 +25,7 @@ stop:
 	pkill gunicorn
 
 lint:
-	pylint --ignore=config.py users tests
+	pylint --rcfile=pylintrc-local --ignore=config.py users tests
 
 bdd:
 	behave

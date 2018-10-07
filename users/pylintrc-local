@@ -349,7 +349,7 @@ ignored-classes=optparse.Values,thread._local,_thread._local, SQLAlchemy, scoped
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis. It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=DB,instance,app,flask_cors,flask_basicauth,werkzeug.security ,flask_jwt,security,flask_migrate,flask_script,flask_restful_swagger_2
+ignored-modules=
 
 # Show a hint with possible names when a member name was not found. The aspect
 # of finding the hint is based on edit distance.

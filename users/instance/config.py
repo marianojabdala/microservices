@@ -4,6 +4,7 @@ import os
 import datetime
 import socket
 
+
 class Config(object):
     """Parent configuration class."""
 
@@ -11,13 +12,15 @@ class Config(object):
     CSRF_ENABLED = True
     PATH = os.getcwd()
     DB_USER = os.getenv("DB_USER")
-    DB_PASSWORD= os.getenv("DB_PASSWORD")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
     CREATE_INITIAL_DB = os.getenv("DB_INIT")
     DB_DEFAULT = os.getenv("DB_DEFAULT")
     DATABASE = DB_DEFAULT if CREATE_INITIAL_DB else os.getenv('DATABASE')
     DB_USER_PASS = DB_USER + ":" + DB_PASSWORD if DB_USER is not None else ""
-    DB_HOST = f"{DB_USER_PASS}{'@'}{os.getenv('DB_HOST')}" if DB_USER_PASS else None
-    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}{DB_HOST if DB_HOST is not None else PATH}/" \
+    DB_HOST = f"{DB_USER_PASS}{'@'}{os.getenv('DB_HOST')}" \
+        if DB_USER_PASS else None
+    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}\
+    {DB_HOST if DB_HOST is not None else PATH}/" \
                               f"{DATABASE}{os.getenv('DB_SUFFIX')}"
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
     JWT_AUTH_HEADER_PREFIX = os.getenv("JWT_AUTH_HEADER_PREFIX")
@@ -28,7 +31,6 @@ class Config(object):
     HOST = socket.getfqdn()
     BASIC_AUTH_USERNAME = os.getenv("BASIC_AUTH_USERNAME")
     BASIC_AUTH_PASSWORD = os.getenv("BASIC_AUTH_PASSWORD")
-
 
     def to_json(self):
         """Return a json object with the used environment variables."""
@@ -46,11 +48,13 @@ class Config(object):
             "CREATE_DB": "Yes" if self.CREATE_INITIAL_DB else "No"
         }
 
+
 class DevelopmentConfig(Config):
     """Configurations for Development."""
 
-    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}{Config.DB_HOST if Config.DB_HOST else Config.PATH }/" \
-                              f"{os.getenv('DATABASE')}{os.getenv('DB_SUFFIX')}"
+    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}\
+    {Config.DB_HOST if Config.DB_HOST else Config.PATH }/"\
+f"{os.getenv('DATABASE')}{os.getenv('DB_SUFFIX')}"
 
     DEBUG = True
 
@@ -59,7 +63,8 @@ class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
 
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}{os.getenv('TEST_DATABASE_NAME')}"
+    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}\
+{os.getenv('TEST_DATABASE_NAME')}"
 
     DEBUG = True
 
@@ -75,6 +80,7 @@ class ProductionConfig(Config):
 
     DEBUG = False
     TESTING = False
+
 
 app_config = {
     'development': DevelopmentConfig,
