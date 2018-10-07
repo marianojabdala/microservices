@@ -22,7 +22,7 @@ docutils==0.14
 extras==1.0.0
 fixtures==3.0.0
 flake8==3.5.0
-Flask==0.12.2
+Flask==1.0.2
 Flask-BasicAuth==0.2.0
 Flask-Bcrypt==0.7.1
 Flask-Cors==3.0.3
