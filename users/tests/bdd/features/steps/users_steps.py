@@ -35,3 +35,4 @@ def step_impl_2(context):
     users.should.have.key("name").being.equal(context.username)
     users.should.have.key("admin").shouldnt.be.ok
     users.should.have.key("uri").being.equal("/users/1")
+w

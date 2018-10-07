@@ -2,6 +2,7 @@ from behave import given, when, then
 from json import loads as json_load
 
 @when("Hit the /_health endpoint")
+
 def step_impl(context):
     res = context.client().get('/_health',
                            headers={"Content-Type": "application/json"})

@@ -7,7 +7,7 @@
 .tox
 .rope*
 *data*
-*mysql*
+*/mysql*
 tmp
 *egg*
 .terraform
