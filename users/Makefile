@@ -50,6 +50,9 @@ ci-with-postman:
 	@echo ******Running python integration tests******
 	pkill gunicorn
 
+build_image:
+	docker build -f deploy/docker/Dockerfile --build-arg APP_SETTINGS=development -t user-service:v1 --compress .
+
 cleanup:
 	@echo ******Shutting down server******
 	rm -rf /tmp/tmp.*

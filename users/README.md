@@ -54,15 +54,16 @@ There is a Makefile where the nested commands are in place to execute the applic
 
 At the users folder level run:
 
-                 docker build -f deploy/docker/Dockerfile --args APP_SETTINGS=development -t user-service:v1 --compress .
-
+``bash
+       make build_image
+```
 That command will create the user-service:v1 image
 
-Then got to the deploy/docker folder and get any of the docker-compose\* and put it on the users folder and run:
+Then run:
 
-       docker-compose -f docker-compose-*.yml up
+       docker-compose -f deploy/docker/docker-compose-*.yml up
 
-For docker-compose-sqlite, you should copy the Dockerfile-sqlite also on the users root folder and then run:
+For docker-compose-sqlite, run:
 
     docker-compose -f docker-compose-sqlite.yml up
 
