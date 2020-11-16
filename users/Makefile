@@ -46,7 +46,7 @@ ci-with-postman:
 	@echo ******Waiting for app to be ready...******
 	sleep 5
 	@echo ******Running Postman tests******
-	newman run tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json
+	./node_modules/.bin/newman run tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json
 	@echo ******Running python integration tests******
 	pkill gunicorn
 

@@ -100,6 +100,6 @@ For remove the kubernetes deploy run:
     make kub_undeploy
 
 In case the database is not initialized there should be a post to the url with the
-/\_init_db endpoint and use the Authentication header with the base64 of BASIC_AUTH_USERNAME:BASIC_AUTH_PASSWORD
+/\_init_db endpoint and use the Authentication header with the base64 of BASIC_AUTH_USERNAME:BASIC_AUTH_PASSWORD that is in the .env file
 
 // TODO: Add the docs folder and the files documentation using sphinx.

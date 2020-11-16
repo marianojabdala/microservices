@@ -17,10 +17,8 @@ class Config(object):
     DB_DEFAULT = os.getenv("DB_DEFAULT")
     DATABASE = DB_DEFAULT if CREATE_INITIAL_DB else os.getenv('DATABASE')
     DB_USER_PASS = DB_USER + ":" + DB_PASSWORD if DB_USER is not None else ""
-    DB_HOST = f"{DB_USER_PASS}{'@'}{os.getenv('DB_HOST')}" \
-        if DB_USER_PASS else None
-    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}\
-    {DB_HOST if DB_HOST is not None else PATH}/" \
+    DB_HOST = f"{DB_USER_PASS}{'@'}{os.getenv('DB_HOST')}" if DB_USER_PASS else None
+    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}{DB_HOST if DB_HOST is not None else PATH}/" \
                               f"{DATABASE}{os.getenv('DB_SUFFIX')}"
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
     JWT_AUTH_HEADER_PREFIX = os.getenv("JWT_AUTH_HEADER_PREFIX")
@@ -52,9 +50,9 @@ class Config(object):
 class DevelopmentConfig(Config):
     """Configurations for Development."""
 
-    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}\
-    {Config.DB_HOST if Config.DB_HOST else Config.PATH }/"\
-f"{os.getenv('DATABASE')}{os.getenv('DB_SUFFIX')}"
+    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}{Config.DB_HOST if Config.DB_HOST else Config.PATH }/" \
+                              f"{os.getenv('DATABASE')}{os.getenv('DB_SUFFIX')}"
+
 
     DEBUG = True
 
@@ -63,8 +61,7 @@ class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
 
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}\
-{os.getenv('TEST_DATABASE_NAME')}"
+    SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX_TEST')}{os.getenv('TEST_DATABASE_NAME')}"
 
     DEBUG = True
 
