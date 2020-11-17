@@ -104,7 +104,7 @@ def add_health_endpoint(app):
                     "used memory": format_value(system_memory[3])
                 }
             })
-    return None
+
 
 
 def add_environment_endpoint(app, config):
@@ -182,7 +182,7 @@ def _create_database(config, database):
     conn.execute("commit")
     conn.execute(f"create database{config['DATABASE']}")
     conn.close()
-    return None
+
 
 def add_index_endpoint(app):
     """

@@ -25,28 +25,31 @@ stop:
 	pkill gunicorn
 
 lint:
-	pylint --rcfile=pylintrc-local --ignore=config.py users tests
+	PYTHONPATH=. pylint --rcfile=pylintrc-local --ignore=config.py users tests
 
-bdd:
-	behave
+report_bdd:
 	allure generate --clean $(ALLURE_OUTPUT_PATH) -o $(ALLURE_REPORT_PATH)
 	cp $(BDD_BASE_PATH)/categories.json $(ALLURE_REPORT_PATH)
 	allure open $(ALLURE_REPORT_PATH)
 
+bdd:
+	behave
+
 ci:
 	make lint
 	PYTHONPATH="../" python -m pytest tests/integration -v
+	make bdd
+	make ci-with-postman
 	@echo ******Cleaning up******
 	make cleanup
 
 ci-with-postman:
-	make ci
 	@echo ******Raising new app for testing******
-	PYTHONPATH="../" DAEMON=true gunicorn --config tests/config.py test_app:APP
+	PYTHONPATH="../" nohup gunicorn --config tests/config.py test_app:APP&
 	@echo ******Waiting for app to be ready...******
-	sleep 5
+	sleep 10
 	@echo ******Running Postman tests******
-	./node_modules/.bin/newman run tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json
+	./node_modules/.bin/newman run tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json --insecure
 	@echo ******Running python integration tests******
 	pkill gunicorn
 
