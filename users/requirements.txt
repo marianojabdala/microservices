@@ -69,12 +69,7 @@ pycparser==2.18
 pydocstyle==2.1.1
 pyflakes==1.6.0
 Pygments==2.2.0
-<<<<<<< ./users/requirements_LOCAL_16805.txt
-||||||| ./users/requirements_BASE_16805.txt
 PyJWT==1.4.2
-=======
-PyJWT==1.4.2
->>>>>>> ./users/requirements_REMOTE_16805.txt
 pylama==7.4.3
 pylama-pylint==3.0.1
 pylint==2.6.0
