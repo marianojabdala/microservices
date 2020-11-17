@@ -23,10 +23,10 @@ jobs:
 #            . venv/bin/activate
 #            pip install -r users/requirements.txt
 
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "users/requirements.txt" }}
+        #      - save_cache:
+        #  paths:
+        #    - ./venv
+        #  key: v1-dependencies-{{ checksum "users/requirements.txt" }}
 
       - run:
           name: run tests
@@ -35,9 +35,9 @@ jobs:
             pip install -r users/requirements.txt
             cd users && make ci
 
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
+#      - store_artifacts:
+#          path: test-reports
+#          destination: test-reports
 workflows:
   version: 2
   build-and-deploy:
