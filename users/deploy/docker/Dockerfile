@@ -1,26 +1,42 @@
-FROM python:alpine3.6
+FROM python:3.7-slim as build-base
 
 LABEL maintainer="marianoabdala@gmail.com"
 
-RUN apk add --update python-dev py-pip gcc linux-headers musl-dev libffi-dev postgresql-dev && \
-    mkdir /app
+RUN apt update && apt install -y --no-install-recommends gcc make wget python3-dev libffi-dev && \
+    python -m venv /opt/venv && \
+    pip install pip --upgrade && \
+    pip install pipenv
+    
+ENV PATH="/opt/venv/bin:$PATH"
 
-WORKDIR /app
+FROM build-base as intermediate-build
 
-COPY requirements.txt /app
+COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-ARG APP_SETTINGS=production
+FROM python:3.7-slim as release-image
 
-ENV APP_SETTINGS $APP_SETTINGS
+COPY --from=intermediate-build /opt/venv /opt/venv
+
+ARG APP_SETTINGS=production
 
 COPY . /app
 
-RUN adduser -S app && chown app:nobody -R /app && \
-    apk del gcc linux-headers musl-dev libffi-dev&& \
-    rm -fr /var/cache/apk/* && \
-    rm -fr /root/.cache
+RUN mkdir -p /var/log/app/ && \
+    addgroup --system appgroup  && \
+    adduser --system app && usermod -aG appgroup app && \
+    chown app:appgroup -R /app && \
+    chown app:appgroup -R /var/log/app/ && \
+    apt autoremove -y && \
+    rm -fr /app/docker/  && \
+    rm -fr /root/.cache /root/.local /var/cache/ && \
+    find / -name "__pycache__" | xargs rm -fr
+
+WORKDIR /app
+
+ENV APP_SETTINGS=$APP_SETTINGS \
+    PATH="/opt/venv/bin:/app:$PATH"
 
 USER app
 

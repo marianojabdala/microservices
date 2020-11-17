@@ -34,7 +34,7 @@ class UserResource(Base):
         self.reqparse.add_argument('isAdmin', type=bool, required=True,
                                    help='No is_admin was provided', location='json')
 
-        super(UserResource, self).__init__()
+        super().__init__()
 
     @swagger.doc({
         'tags': ['users'],
@@ -168,7 +168,7 @@ class UserList(Resource):
                                    help='No user name provided', location='json')
         self.reqparse.add_argument('password', type=str, required=True,
                                    help='No password provided', location='json')
-        super(UserList, self).__init__()
+        super().__init__()
 
     @swagger.doc({
         'tags': ['users'],

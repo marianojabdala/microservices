@@ -1,42 +1,51 @@
 version: 2
 jobs:
   build:
-    branches:
-        - master
-        - development
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.7.9
 
     steps:
       - checkout
 
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "users/requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+#      - restore_cache:
+#          keys:
+#          - v1-dependencies-{{ checksum "users/requirements.txt" }}
+#          # fallback to using the latest cache if no exact match is found
+#          - v1-dependencies-
 
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r users/requirements.txt
+#      - run:
+#          name: install dependencies
+#          command: |
+#            python3 -m venv venv
+#            . venv/bin/activate
+#            pip install -r users/requirements.txt
 
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "users/requirements.txt" }}
+        #      - save_cache:
+        #  paths:
+        #    - ./venv
+        #  key: v1-dependencies-{{ checksum "users/requirements.txt" }}
 
       - run:
           name: run tests
           command: |
+            python3 -m venv venv
             . venv/bin/activate
-              cd users && make ci
+            pip install -r users/requirements.txt
+            echo "Work in progress"
 
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
+#      - store_artifacts:
+#          path: test-reports
+#          destination: test-reports
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - master
+                - development

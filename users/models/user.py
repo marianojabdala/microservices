@@ -38,7 +38,6 @@ class UserModel(DB.Model):
         """
         DB.session.add(self)
         DB.session.commit()
-        return None
 
     @classmethod
     def get_all(cls):
@@ -57,7 +56,6 @@ class UserModel(DB.Model):
         """
         DB.session.delete(self)
         DB.session.commit()
-        return None
 
     @classmethod
     def get_user_by_id(cls, _id):
