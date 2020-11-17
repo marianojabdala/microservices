@@ -36,7 +36,6 @@ bdd:
 	behave
 
 ci:
-	make lint
 	PYTHONPATH="../" python -m pytest tests/integration -v
 	make bdd
 	make ci-with-postman
