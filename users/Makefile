@@ -24,7 +24,6 @@ stop:
 	pkill gunicorn
 
 lint:
-
 	pylint --rcfile=pylintrc --ignore=config.py,tests,setup.py,models,dtos,swagger,test_app.py users
 
 bdd:
@@ -36,15 +35,10 @@ bdd-with-reports:
 	cp $(BDD_BASE_PATH)/categories.json $(ALLURE_REPORT_PATH)
 	allure open $(ALLURE_REPORT_PATH)
 
-bdd:
-	behave
-
 ci:
-
 	make lint
 	TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite python -m pytest tests/integration -v --cov=users --html=test_reports/report-$(shell  date +%Y-%m-%d).html
 	make bdd
-	make ci-with-postman
 
 	@echo ******Cleaning up******
 	make cleanup
@@ -73,10 +67,6 @@ clean:
 
 docs:
 	PYTHONPATH="../" sphinx-apidoc -M -o ../docs/source . tests test_app.py; cd ../docs; PYTHONPATH="../users" make html
-
-build_image:
-	docker build -f deploy/docker/Dockerfile --build-arg APP_SETTINGS=development -t user-service:v1 --compress .
-
 
 kube_setup:
 	 @echo "Be sure you run #eval (minikube docker-env) before kube_deploy or kube_undeploy"
