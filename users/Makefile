@@ -37,7 +37,7 @@ bdd-with-reports:
 
 ci:
 	make lint
-	TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite python -m pytest tests/integration -v --cov=users --html=test_reports/report-$(shell  date +%Y-%m-%d).html
+	TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite python -m pytest tests/integration -v --cov=users --html=/tmp/test_reports/report-$(shell  date +%Y-%m-%d).html
 	make bdd
 
 	@echo ******Cleaning up******

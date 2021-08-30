@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  test:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
@@ -25,7 +25,6 @@ jobs:
             cd users
             poetry install --no-root
 
-
       - run:
           name: run tests
           command: |
@@ -33,17 +32,15 @@ jobs:
             . venv/bin/activate
             cd users
             make ci
-
-
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
+          path: /tmp/test_reports/
+          destination: /tmp/test_reports/
 
 workflows:
   version: 2
-  build-and-deploy:
+  test:
     jobs:
-      - build:
+      - test:
           filters:
             branches:
               only:
