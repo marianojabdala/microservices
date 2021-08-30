@@ -13,8 +13,8 @@ import os
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager  # class for handling a set of commands
 
-from instance import create_app
-from db import DB
+from users.instance import create_app
+from users.db import DB
 
 from . import * # pylint: disable=wildcard-import
 

@@ -2,7 +2,7 @@
 """Class used as the model for the database."""
 from werkzeug.security import generate_password_hash
 
-from db import DB
+from users.db import DB
 
 class UserModel(DB.Model):
     """This class represents the User table."""

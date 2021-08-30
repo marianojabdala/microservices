@@ -83,7 +83,7 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/?#install-kubectl-binary-
 
          eval $(minikube docker-env)
 
-  (This wiil get into the minikube machine)
+  (This will get into the minikube machine)
 
 - In the same directory as the Dokerfile(users) run the next command:
 
