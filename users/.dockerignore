@@ -11,3 +11,4 @@ migrations
 tmp
 .terraform
 test_reports
+node_modules

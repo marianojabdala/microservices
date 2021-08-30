@@ -9,9 +9,9 @@ could be deployed using docker-compose and kubernetes(minikube) also runs locall
 
 - Install python virtualenv from: https://github.com/pyenv/pyenv#installation
 
-- Install python 3.6.x with
+- Install python 3.x.x with
 
-  pyenv install 3.6.x
+  pyenv install 3.x.x
 
 * Create a folder where you want to get the code, then clone the application.
   Eg.
@@ -49,6 +49,39 @@ There is a Makefile where the nested commands are in place to execute the applic
 - Run it as development(reload the changes you make on the code.)
 
         make run-local ( stop with Ctrl+C)
+
+### Testing
+
+There are 3 kind of test: 
+1 - Integration test
+2 - BDD Tests
+3 - Integration tests with postman
+
+#### Details
+ 1 - Integration test
+ To be able to run this test just open the terminal and run
+```bash
+  make ci
+```
+this will run also the bdd tests
+
+ 2 - BDD Tests
+ To be able to run this test just open the terminal and run
+```bash
+  make bdd
+```
+ 2.1 - bdd-with-reports: This will generate the reports for the bdd test, before run this just read de README.md file inside the bdd folder  
+
+3 - Integration tests with postman
+Before run this test the newman package should be installed, to do this npm should be installed in the system.
+Then go to the tests/postman folder and type:
+```bash
+npm install
+```
+and then go back to the users folder and run this:
+```bash
+  make ci-with-postam
+```
 
 ### Using Docker
 

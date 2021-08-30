@@ -29,23 +29,26 @@ lint:
 bdd:
 	PYTHONPATH=../  behave -x
 
-#	allure generate --clean $(ALLURE_OUTPUT_PATH) -o $(ALLURE_REPORT_PATH)
-#	cp $(BDD_BASE_PATH)/categories.json $(ALLURE_REPORT_PATH)
-#	allure open $(ALLURE_REPORT_PATH)
+bdd-with-reports:
+	make bdd
+	allure generate --clean $(ALLURE_OUTPUT_PATH) -o $(ALLURE_REPORT_PATH)
+	cp $(BDD_BASE_PATH)/categories.json $(ALLURE_REPORT_PATH)
+	allure open $(ALLURE_REPORT_PATH)
 
 ci:
 	make lint
-	TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite python -m pytest tests/integration -v --cov=users --html=test_reports/report.html
+	TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite python -m pytest tests/integration -v --cov=users --html=test_reports/report-$(shell  date +%Y-%m-%d).html
+	make bdd
 	@echo ******Cleaning up******
 	make cleanup
 
 ci-with-postman:
 	@echo ******Raising new app for testing******
-	PYTHONPATH="../" TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite gunicorn --config tests/config.py test_app:APP&
+	PYTHONPATH="../" TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite nohup gunicorn --config tests/config.py test_app:APP&
 	@echo ******Waiting for app to be ready...******
 	sleep 10
 	@echo ******Running Postman tests******
-	newman run --verbose tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json
+	tests/node_modules/.bin/newman run --verbose tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json
 	@echo ******Running python integration tests******
 	pkill gunicorn
 
@@ -59,6 +62,10 @@ clean:
 
 docs:
 	PYTHONPATH="../" sphinx-apidoc -M -o ../docs/source . tests test_app.py; cd ../docs; PYTHONPATH="../users" make html
+
+build_image:
+	docker build -f deploy/docker/Dockerfile --build-arg APP_SETTINGS=development -t user-service:v1 --compress .
+
 
 kube_setup:
 	 @echo "Be sure you run #eval (minikube docker-env) before kube_deploy or kube_undeploy"
