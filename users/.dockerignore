@@ -10,3 +10,4 @@ migrations
 *yaml
 tmp
 .terraform
+test_reports
