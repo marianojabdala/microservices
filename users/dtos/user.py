@@ -60,7 +60,6 @@ class UserDto:
         self._id = attr["_id"]
         self.name = attr["username"]
         self.password = attr["password"]
-        return None
 
     def __repr__(self):
         """

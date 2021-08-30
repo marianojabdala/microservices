@@ -1,7 +1,10 @@
+
 FROM python:3.9-slim as build-base
+
 
 LABEL maintainer="marianoabdala@gmail.com"
 LABEL user.microservice.version="0.1.0"
+
 
 RUN apt update && apt install -y --no-install-recommends gcc make wget python3-dev && \
     python -m venv --copies /opt/venv && \
@@ -19,13 +22,18 @@ RUN cd /tmp && \
     /opt/venv/bin/activate && pip install -r requirements.txt && \
     rm /tmp/pyproject.toml
 
+
 FROM python:3.9-slim as release-image
 
-ARG APP_SETTINGS=production
+FROM python:3.7-slim as release-image
 
 COPY --from=intermediate-build /opt/venv /opt/venv
 
+
 COPY . /app/users
+
+ARG APP_SETTINGS=production
+
 
 RUN mkdir -p /var/log/app/ && \
     addgroup --system appgroup  && \
@@ -42,6 +50,7 @@ WORKDIR /app
 ENV APP_SETTINGS=$APP_SETTINGS \
     PATH="/opt/venv/bin:/app:/app/users:$PATH" \
     PYTHONPATH="../"
+WORKDIR /app
 
 USER app
 

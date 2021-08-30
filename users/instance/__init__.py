@@ -88,16 +88,26 @@ def add_health_endpoint(app):
         process_memory = process.memory_percent()
         environ = process.environ()
 
-        return json.dumps({
-            "app": {"process memory used %": round(process_memory, 2),
-                "rss": format_value(rss), "vms": format_value(vms),
-                "uss": format_value(uss), "pss": format_value(pss),
-                "shared": format_value(shared), "running on cpu N°": cpu_num,
-                "cpu used in %": cpu_percent}, "system": {"environ": environ,
-                "total memory": format_value(system_memory[0]),
-                "available memory": format_value(system_memory[1]),
-                "percent total memory": system_memory[2],
-                "used memory": format_value(system_memory[3])}})
+
+        return json.dumps(
+            {
+                "app": {
+                    "process memory used %": round(process_memory, 2),
+                    "rss": format_value(rss),
+                    "vms": format_value(vms),
+                    "uss": format_value(uss),
+                    "pss": format_value(pss),
+                    "shared": format_value(shared),
+                    "running on cpu N°": cpu_num,
+                    "cpu used in %": cpu_percent
+                }, "system": {
+                    "environ": environ,
+                    "total memory": format_value(system_memory[0]),
+                    "available memory": format_value(system_memory[1]),
+                    "percent total memory": system_memory[2],
+                    "used memory": format_value(system_memory[3])
+                }
+            })
 
 
 def add_environment_endpoint(app, config):

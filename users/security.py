@@ -18,9 +18,9 @@ def authenticate(username, password):
     :return: UserDTO: The dto that contains some user info.
     """
     user = UserModel.query.filter_by(username=username).first()
+
     if user and check_password_hash(user.password, password):
         return UserDto(user)
-
     return None
 
 
@@ -36,5 +36,4 @@ def identity(payload):
 
     if user:
         return UserDto(user)
-
     return None

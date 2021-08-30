@@ -22,6 +22,7 @@ class Config(object):
     DB_HOST = f"{DB_USER_PASS}{'@'}{os.getenv('DB_HOST')}" \
         if DB_USER_PASS else None
     SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}{DB_HOST if DB_HOST is not None else PATH}/{DATABASE}{os.getenv('DB_SUFFIX')}"
+
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
     JWT_AUTH_HEADER_PREFIX = os.getenv("JWT_AUTH_HEADER_PREFIX")
     JWT_EXPIRATION_DELTA = datetime.timedelta(seconds=30)
@@ -52,7 +53,9 @@ class Config(object):
 class DevelopmentConfig(Config):
     """Configurations for Development."""
 
+
     SQLALCHEMY_DATABASE_URI = f"{os.getenv('DB_PREFIX')}{Config.DB_HOST if Config.DB_HOST else Config.PATH }/"f"{os.getenv('DATABASE')}{os.getenv('DB_SUFFIX')}"
+
     DEBUG = True
 
 

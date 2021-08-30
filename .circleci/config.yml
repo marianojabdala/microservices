@@ -4,8 +4,8 @@ jobs:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.9.6
 
+      - image: circleci/python:3.9.6
     steps:
       - checkout
 
@@ -25,16 +25,20 @@ jobs:
             cd users
             poetry install --no-root
 
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "users/requirements.txt" }}
+
+        #      - save_cache:
+        #  paths:
+        #    - ./venv
+        #  key: v1-dependencies-{{ checksum "users/requirements.txt" }}
 
       - run:
           name: run tests
           command: |
+            python3 -m venv venv
             . venv/bin/activate
-              cd users && make ci
+            pip install -r users/requirements.txt
+            echo "Work in progress"
+
 
       - store_artifacts:
           path: test-reports
@@ -50,3 +54,4 @@ workflows:
               only:
                 - master
                 - development
+

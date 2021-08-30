@@ -87,15 +87,16 @@ and then go back to the users folder and run this:
 
 At the users folder level run:
 
-                 docker build -f deploy/docker/Dockerfile --args APP_SETTINGS=development -t user-service:v1 --compress .
-
+``bash
+       make build_image
+```
 That command will create the user-service:v1 image
 
-Then got to the deploy/docker folder and get any of the docker-compose\* and put it on the users folder and run:
+Then run:
 
-       docker-compose -f docker-compose-*.yml up
+       docker-compose -f deploy/docker/docker-compose-*.yml up
 
-For docker-compose-sqlite, you should copy the Dockerfile-sqlite also on the users root folder and then run:
+For docker-compose-sqlite, run:
 
     docker-compose -f docker-compose-sqlite.yml up
 
@@ -133,6 +134,6 @@ For remove the kubernetes deploy run:
     make kub_undeploy
 
 In case the database is not initialized there should be a post to the url with the
-/\_init_db endpoint and use the Authentication header with the base64 of BASIC_AUTH_USERNAME:BASIC_AUTH_PASSWORD
+/\_init_db endpoint and use the Authentication header with the base64 of BASIC_AUTH_USERNAME:BASIC_AUTH_PASSWORD that is in the .env file
 
 // TODO: Add the docs folder and the files documentation using sphinx.
