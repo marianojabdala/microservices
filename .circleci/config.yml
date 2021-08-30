@@ -26,18 +26,13 @@ jobs:
             poetry install --no-root
 
 
-        #      - save_cache:
-        #  paths:
-        #    - ./venv
-        #  key: v1-dependencies-{{ checksum "users/requirements.txt" }}
-
       - run:
           name: run tests
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install -r users/requirements.txt
-            echo "Work in progress"
+            make ci
 
 
       - store_artifacts:
