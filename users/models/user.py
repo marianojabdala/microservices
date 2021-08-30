@@ -2,7 +2,7 @@
 """Class used as the model for the database."""
 from werkzeug.security import generate_password_hash
 
-from db import DB
+from users.db import DB
 
 class UserModel(DB.Model):
     """This class represents the User table."""
@@ -38,7 +38,6 @@ class UserModel(DB.Model):
         """
         DB.session.add(self)
         DB.session.commit()
-        return None
 
     @classmethod
     def get_all(cls):
@@ -57,7 +56,6 @@ class UserModel(DB.Model):
         """
         DB.session.delete(self)
         DB.session.commit()
-        return None
 
     @classmethod
     def get_user_by_id(cls, _id):

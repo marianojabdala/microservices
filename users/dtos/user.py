@@ -23,6 +23,8 @@ Section breaks are created by resuming unindented text. Section breaks
 are also implicitly created anytime a new section starts.
 
 """
+
+
 # pylint: disable=too-few-public-methods
 class UserDto:
     """User Dto that is send back to the client of the api."""
@@ -58,7 +60,6 @@ class UserDto:
         self._id = attr["_id"]
         self.name = attr["username"]
         self.password = attr["password"]
-        return None
 
     def __repr__(self):
         """

@@ -9,9 +9,9 @@ could be deployed using docker-compose and kubernetes(minikube) also runs locall
 
 - Install python virtualenv from: https://github.com/pyenv/pyenv#installation
 
-- Install python 3.6.x with
+- Install python 3.x.x with
 
-  pyenv install 3.6.x
+  pyenv install 3.x.x
 
 * Create a folder where you want to get the code, then clone the application.
   Eg.
@@ -50,19 +50,53 @@ There is a Makefile where the nested commands are in place to execute the applic
 
         make run-local ( stop with Ctrl+C)
 
+### Testing
+
+There are 3 kind of test: 
+1 - Integration test
+2 - BDD Tests
+3 - Integration tests with postman
+
+#### Details
+ 1 - Integration test
+ To be able to run this test just open the terminal and run
+```bash
+  make ci
+```
+this will run also the bdd tests
+
+ 2 - BDD Tests
+ To be able to run this test just open the terminal and run
+```bash
+  make bdd
+```
+ 2.1 - bdd-with-reports: This will generate the reports for the bdd test, before run this just read de README.md file inside the bdd folder  
+
+3 - Integration tests with postman
+Before run this test the newman package should be installed, to do this npm should be installed in the system.
+Then go to the tests/postman folder and type:
+```bash
+npm install
+```
+and then go back to the users folder and run this:
+```bash
+  make ci-with-postam
+```
+
 ### Using Docker
 
 At the users folder level run:
 
-                 docker build -f deploy/docker/Dockerfile --args APP_SETTINGS=development -t user-service:v1 --compress .
-
+``bash
+       make build_image
+```
 That command will create the user-service:v1 image
 
-Then got to the deploy/docker folder and get any of the docker-compose\* and put it on the users folder and run:
+Then run:
 
-       docker-compose -f docker-compose-*.yml up
+       docker-compose -f deploy/docker/docker-compose-*.yml up
 
-For docker-compose-sqlite, you should copy the Dockerfile-sqlite also on the users root folder and then run:
+For docker-compose-sqlite, run:
 
     docker-compose -f docker-compose-sqlite.yml up
 
@@ -83,7 +117,7 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/?#install-kubectl-binary-
 
          eval $(minikube docker-env)
 
-  (This wiil get into the minikube machine)
+  (This will get into the minikube machine)
 
 - In the same directory as the Dokerfile(users) run the next command:
 
@@ -100,6 +134,6 @@ For remove the kubernetes deploy run:
     make kub_undeploy
 
 In case the database is not initialized there should be a post to the url with the
-/\_init_db endpoint and use the Authentication header with the base64 of BASIC_AUTH_USERNAME:BASIC_AUTH_PASSWORD
+/\_init_db endpoint and use the Authentication header with the base64 of BASIC_AUTH_USERNAME:BASIC_AUTH_PASSWORD that is in the .env file
 
 // TODO: Add the docs folder and the files documentation using sphinx.

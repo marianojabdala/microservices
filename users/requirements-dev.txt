@@ -1,0 +1,54 @@
+allure-behave==2.9.43
+allure-python-commons==2.9.43
+aniso8601==9.0.1
+astroid==2.7.2; python_version >= "3.6" and python_version < "4.0"
+atomicwrites==1.4.0; python_version >= "3.6" and python_full_version < "3.0.0" and sys_platform == "win32" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6") or sys_platform == "win32" and python_version >= "3.6" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6") and python_full_version >= "3.4.0"
+attrs==21.2.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
+backports.entry-points-selectable==1.1.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "2.7"
+behave==1.2.6; (python_version >= "2.6" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
+click==8.0.1; python_version >= "3.6"
+colorama==0.4.4; python_version >= "3.6" and python_full_version < "3.0.0" and sys_platform == "win32" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6") and platform_system == "Windows" and python_version < "4.0" or sys_platform == "win32" and python_version >= "3.6" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6") and python_full_version >= "3.5.0" and platform_system == "Windows" and python_version < "4.0"
+coverage==5.5; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0" and python_version < "4")
+distlib==0.3.2; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+filelock==3.0.12; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+flask-basicauth==0.2.0
+flask-cors==3.0.10
+flask-jwt==0.3.2
+flask-restful-swagger-2==0.35
+flask-restful==0.3.9
+flask-sqlalchemy==2.5.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
+flask==2.0.1; python_version >= "3.6"
+greenlet==1.1.1; python_version >= "3" and python_full_version < "3.0.0" and platform_machine in "x86_64 X86_64 aarch64 AARCH64 ppc64le PPC64LE amd64 AMD64 win32 WIN32" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0") or python_version >= "3" and platform_machine in "x86_64 X86_64 aarch64 AARCH64 ppc64le PPC64LE amd64 AMD64 win32 WIN32" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0") and python_full_version >= "3.5.0"
+gunicorn==20.1.0; python_version >= "3.5"
+iniconfig==1.1.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
+isort==5.9.3; python_full_version >= "3.6.1" and python_version < "4.0" and python_version >= "3.6"
+itsdangerous==2.0.1; python_version >= "3.6"
+jinja2==3.0.1; python_version >= "3.6"
+lazy-object-proxy==1.6.0; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.6" and python_version < "4.0" and python_full_version >= "3.6.0"
+markupsafe==2.0.1; python_version >= "3.6"
+mccabe==0.6.1; python_version >= "3.6" and python_version < "4.0"
+mock==4.0.3; python_version >= "3.6"
+packaging==21.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
+parse-type==0.5.2; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
+parse==1.19.0; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
+platformdirs==2.2.0; python_version >= "3.6" and python_version < "4.0" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6")
+pluggy==0.13.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
+psutil==5.8.0; (python_version >= "2.6" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
+py==1.10.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
+pyjwt==1.4.2
+pylint==2.10.2; python_version >= "3.6" and python_version < "4.0"
+pyparsing==2.4.7; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
+pytest-cov==2.12.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
+pytest-html==3.1.1; python_version >= "3.6"
+pytest-metadata==1.11.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6"
+pytest==6.2.4; python_version >= "3.6"
+python-dotenv==0.19.0; python_version >= "3.5"
+pytz==2021.1
+six==1.16.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+sqlalchemy==1.4.23; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
+sure==2.0.0
+toml==0.10.2; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4.0" or python_full_version >= "3.5.0" and python_version >= "3.6" and python_version < "4.0"
+tox==3.24.3; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
+virtualenv==20.7.2; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+werkzeug==2.0.1; python_version >= "3.6"
+wrapt==1.12.1; python_version >= "3.6" and python_version < "4.0"

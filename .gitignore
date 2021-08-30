@@ -16,3 +16,6 @@ terraform.tfstate
 terraform.tfstate.backup
 *allure.output*
 *report*
+node_modules
+*out*
+None
