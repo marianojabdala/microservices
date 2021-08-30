@@ -1,12 +1,10 @@
+SHELL=/bin/bash
+
 export APP_NAME=microservices
 
 export TMP_DIR=$(shell mktemp -d)
 
-export TEST_DATABASE_NAME=$(shell echo $(TMP_DIR))/tests-microservices.sqlite
-
 MAKEFLAGS += --no-print-directory
-
-SHELL=/bin/bash
 
 BDD_BASE_PATH=$(PWD)/tests/bdd
 
@@ -15,40 +13,44 @@ ALLURE_OUTPUT_PATH=allure.output
 ALLURE_REPORT_PATH=$(BDD_BASE_PATH)/allure-report
 
 run:
-	DAEMON=true APP_SETTINGS=production gunicorn --config config.py app:APP
+	PYTHONPATH=../ DAEMON=true APP_SETTINGS=production gunicorn --config config.py app:APP
 
 run-local:
-	APP_SETTINGS=development gunicorn --reload --config config.py app:APP
+	make lint
+	PYTHONPATH=../ APP_SETTINGS=development gunicorn --reload --config config.py app:APP
 
 stop:
 	@echo ******Shutting down server******
 	pkill gunicorn
 
 lint:
-	PYTHONPATH=. pylint --rcfile=pylintrc-local --ignore=config.py users tests
+	pylint --rcfile=pylintrc --ignore=config.py,tests,setup.py,models,dtos,swagger,test_app.py users
 
-report_bdd:
+bdd:
+	PYTHONPATH=../  behave -x
+
+bdd-with-reports:
+	make bdd
 	allure generate --clean $(ALLURE_OUTPUT_PATH) -o $(ALLURE_REPORT_PATH)
 	cp $(BDD_BASE_PATH)/categories.json $(ALLURE_REPORT_PATH)
 	allure open $(ALLURE_REPORT_PATH)
 
-bdd:
-	behave
-
 ci:
-	PYTHONPATH="../" python -m pytest tests/integration -v
+	make lint
+	TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite python -m pytest tests/integration -v --cov=users --html=test_reports/report-$(shell  date +%Y-%m-%d).html
 	make bdd
-	make ci-with-postman
+
 	@echo ******Cleaning up******
 	make cleanup
 
 ci-with-postman:
 	@echo ******Raising new app for testing******
-	PYTHONPATH="../" nohup gunicorn --config tests/config.py test_app:APP&
+
+	PYTHONPATH="../" TEST_DATABASE_NAME='microservices' TEST_DATABASE_PATH=$(shell echo $(TMP_DIR))/tests-microservices.sqlite nohup gunicorn --config tests/config.py test_app:APP&
 	@echo ******Waiting for app to be ready...******
 	sleep 10
 	@echo ******Running Postman tests******
-	./node_modules/.bin/newman run tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json --insecure
+	tests/node_modules/.bin/newman run --verbose tests/postman/Users.postman_collection.json -e tests/postman/Microservices.postman_environment.json
 	@echo ******Running python integration tests******
 	pkill gunicorn
 
@@ -58,6 +60,7 @@ build_image:
 cleanup:
 	@echo ******Shutting down server******
 	rm -rf /tmp/tmp.*
+
 
 clean:
 	@find . -name "__pycache__" | xargs rm -fr

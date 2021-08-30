@@ -1,6 +1,7 @@
-from instance import create_app
-from db import DB
+from users.instance import create_app
+from users.db import DB
 import logging
+
 
 def before_all(context):
     context.app = create_app(config_name="testing")
@@ -13,6 +14,7 @@ def before_all(context):
         DB.init_app(context.app)
         # create all tables
         DB.create_all()
+
 
 def after_all(context):
     """Teardown all initialized variables."""

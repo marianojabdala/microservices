@@ -6,10 +6,10 @@ from flask_jwt import jwt_required
 
 from werkzeug.security import generate_password_hash
 
-from swagger.schemas.user import UserSchema
-from resources.base import Base
-from models.user import UserModel
-from dtos.user import UserDto
+from users.swagger.schemas.user import UserSchema
+from users.resources.base import Base
+from users.models.user import UserModel
+from users.dtos.user import UserDto
 
 USER_FIELDS = {
     "_id": fields.Integer,

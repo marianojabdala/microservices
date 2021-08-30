@@ -2,8 +2,8 @@
 """Base test class."""
 import json
 import unittest
-from db import DB
-from instance import create_app
+from users.db import DB
+from users.instance import create_app
 
 
 class BaseTestCase(unittest.TestCase):

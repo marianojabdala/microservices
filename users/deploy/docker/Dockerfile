@@ -1,45 +1,59 @@
-FROM python:3.7-slim as build-base
+
+FROM python:3.9-slim as build-base
+
 
 LABEL maintainer="marianoabdala@gmail.com"
+LABEL user.microservice.version="0.1.0"
 
-RUN apt update && apt install -y --no-install-recommends gcc make wget python3-dev libffi-dev && \
-    python -m venv /opt/venv && \
+
+RUN apt update && apt install -y --no-install-recommends gcc make wget python3-dev && \
+    python -m venv --copies /opt/venv && \
     pip install pip --upgrade && \
-    pip install pipenv
+    pip install poetry
     
 ENV PATH="/opt/venv/bin:$PATH"
 
-FROM build-base as intermediate-build
+FROM build-base AS intermediate-build
 
-COPY requirements.txt .
+COPY pyproject.toml /tmp
+RUN cd /tmp && \
+    poetry export -o requirements.txt --without-hashes && \
+    chmod +x /opt/venv/bin/activate && \
+    /opt/venv/bin/activate && pip install -r requirements.txt && \
+    rm /tmp/pyproject.toml
 
-RUN pip install -r requirements.txt
+
+FROM python:3.9-slim as release-image
 
 FROM python:3.7-slim as release-image
 
 COPY --from=intermediate-build /opt/venv /opt/venv
 
+
+COPY . /app/users
+
 ARG APP_SETTINGS=production
 
-COPY . /app
 
 RUN mkdir -p /var/log/app/ && \
     addgroup --system appgroup  && \
-    adduser --system app && usermod -aG appgroup app && \
+    adduser --system app --no-create-home && usermod -aG appgroup app && \
     chown app:appgroup -R /app && \
     chown app:appgroup -R /var/log/app/ && \
-    apt autoremove -y && \
-    rm -fr /app/docker/  && \
+    rm -fr /app/users/deploy  && \
+    rm -fr /app/users/poetry.lock /app/users/pyproject.toml /app/users/Makefile && \
     rm -fr /root/.cache /root/.local /var/cache/ && \
     find / -name "__pycache__" | xargs rm -fr
 
 WORKDIR /app
 
 ENV APP_SETTINGS=$APP_SETTINGS \
-    PATH="/opt/venv/bin:/app:$PATH"
+    PATH="/opt/venv/bin:/app:/app/users:$PATH" \
+    PYTHONPATH="../"
+WORKDIR /app
 
 USER app
 
-EXPOSE 5000
+EXPOSE 8000
 
-ENTRYPOINT ["gunicorn" ,"--config", "config.py", "app:APP"]
+ENTRYPOINT ["/opt/venv/bin/gunicorn" ,"--config", "/app/users/config.py", "users.app:APP"]

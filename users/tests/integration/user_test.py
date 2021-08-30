@@ -4,6 +4,7 @@ import unittest
 from json import dumps as json_dump, loads as json_load
 from users.tests.base import BaseTestCase
 
+
 class UsersTestCase(BaseTestCase):
     """This class represents the Users test case"""
 
@@ -24,14 +25,13 @@ class UsersTestCase(BaseTestCase):
         self.assertEqual(users["admin"], False, "The new user shouldn't be admin")
         self.assertEqual(users["uri"], "/users/1", "The uri doesn't match")
 
-
-    #
     def test_api_can_get_all_users(self):
         """Test API can get a users (GET request)."""
         user = {
             "name": "test",
             "password": "12345"
         }
+
         res = self.client().post('/users', data=json_dump(user),
                                  headers={"Content-Type":"application/json"})
         self.assertEqual(res.status_code, 201)
@@ -69,7 +69,6 @@ class UsersTestCase(BaseTestCase):
         """Test API can edit an existing user. (PUT request)"""
         user = {'name': 'Test User 2', "password": "123455"}
 
-
         response = self.client().post('/users', data=json_dump(user),
                                       headers={"Content-Type": "application/json"})
 
@@ -88,7 +87,6 @@ class UsersTestCase(BaseTestCase):
             "name": "Test User 2",
             "password": "12346",
             "isAdmin": True
-
         }
 
         response = self.client().put(
@@ -127,7 +125,6 @@ class UsersTestCase(BaseTestCase):
         # Test to see if it exists, should return a 401
         result = self.client().get(f'/users/{user_id}', headers=headers)
         self.assertEqual(result.status_code, 401)
-
 
 
 # Make the tests conveniently executable

@@ -15,8 +15,8 @@ echo 'eval "$(pyenv virtualenv-init -)"' >> $HOME/.bash_profile
 
 source $HOME/.bash_profile
 
-#Install python 3.6.0
-pyenv install 3.6.0
+#Install python 3.9
+pyenv install 3.9
 
 #Creates a new virtual env
 pyenv virtualenv python-virtual

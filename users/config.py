@@ -8,13 +8,10 @@ threads=1
 errorlog='-'
 loglevel='info'
 accesslog='-'
-port=5000 if environ.get("APP_SETTINGS").upper()=="DEVELOPMENT" else 80
-bind="0.0.0.0:" + str(port)
-certfile="microservice-example.org+4.pem"
-keyfile="microservice-example.org+4-key.pem"
+port= environ.get("APP_PORT", 8000)
+bind = f'0.0.0.0:{port}'
 user=getuid()
 group=getgid()
-daemon=False if environ.get("DAEMON") is None else True
 access_log_format='%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s %(D)sµs"'
 
 

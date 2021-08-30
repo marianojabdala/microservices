@@ -13,8 +13,8 @@ import os
 
 from flask_cors import CORS
 
-from db import DB
-from instance import create_app
+from users.db import DB
+from users.instance import create_app
 
 APP = create_app(os.getenv("APP_SETTINGS"), database=DB)
 

@@ -10,4 +10,5 @@ migrations
 *yaml
 tmp
 .terraform
+test_reports
 node_modules

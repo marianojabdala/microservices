@@ -2,28 +2,29 @@
 """Create the application and other endpoints."""
 from os import path
 
-from dotenv import load_dotenv, find_dotenv
-
-from flask import Flask, json
-from flask_restful_swagger_2 import Api
-from flask_jwt import JWT
-from flask_basicauth import BasicAuth
-
 import psutil
+from dotenv import load_dotenv, find_dotenv
+from flask import Flask, json
+from flask_basicauth import BasicAuth
+from flask_jwt import JWT
+from flask_restful_swagger_2 import Api
 
-from resources.user import UserResource, UserList
-from security import authenticate, identity
+from users.instance.config import app_config
+from users.resources.user import UserResource, UserList
+from users.security import authenticate, identity
 
-load_dotenv(find_dotenv(".env", raise_error_if_not_found=True), verbose=True)
+#load_dotenv(find_dotenv(".env", raise_error_if_not_found=True), verbose=True)
 
-from instance.config import app_config #pylint: disable=wrong-import-position
+
+# -position
 
 
 def create_app(config_name, database=None):
     """
     Create the api application with the proper configurations.
 
-    :param config_name: The name of the configuration to load, eg: development, production
+    :param config_name: The name of the configuration to load,
+    eg: development, production
     :param database: The database object
     :return the app object whit the Flask app in it.
     """
@@ -31,13 +32,12 @@ def create_app(config_name, database=None):
     application.config.from_object(app_config[config_name])
     application.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    a_p_i = Api(application, api_version='1.0',
-                api_spec_url='/api/swagger')
+    a_p_i = Api(application, api_version='1.0', api_spec_url='/api/swagger')
 
     a_p_i.add_resource(UserList, "/users", endpoint="users")
     a_p_i.add_resource(UserResource, "/users/<_id>", endpoint="user")
 
-    JWT(application, authenticate, identity) # pylint: disable=unused-variable
+    JWT(application, authenticate, identity)  # pylint: disable=unused-variable
 
     add_index_endpoint(application)
 
@@ -56,15 +56,18 @@ def add_health_endpoint(app):
     Add /_health endpoint.
 
     :param app: The application to add the endpoint
-    :return: A json object that shows metrics about the application and the system.
+    :return: A json object that shows metrics about the application and the
+    system.
     """
+
     @app.route("/_health", methods=["GET"])
-    def health(): # pylint: disable=unused-variable
+    def health():  # pylint: disable=unused-variable
         """
         Create the /_health endpoint for the app and the system.
 
         :param app: The application to add the endpoint
-        :return: A json object that shows metrics about the application and the system.
+        :return: A json object that shows metrics about the application and
+        the system.
         """
         process = psutil.Process()
         with process.oneshot():
@@ -84,6 +87,7 @@ def add_health_endpoint(app):
         system_memory = psutil.virtual_memory()
         process_memory = process.memory_percent()
         environ = process.environ()
+
 
         return json.dumps(
             {
@@ -106,7 +110,6 @@ def add_health_endpoint(app):
             })
 
 
-
 def add_environment_endpoint(app, config):
     """
     Create a /_environ endpoint.
@@ -116,10 +119,12 @@ def add_environment_endpoint(app, config):
 
     :param app:
     :param config:
-    :return: A json file that expose the configuration variables loaded on the environment.
+    :return: A json file that expose the configuration variables loaded on
+    the environment.
     """
+
     @app.route("/_environ", methods=["GET"])
-    def environment(): # pylint: disable=unused-variable
+    def environment():  # pylint: disable=unused-variable
         """
         Create a /_environ endpoint.
 
@@ -128,16 +133,10 @@ def add_environment_endpoint(app, config):
 
         :param app:
         :param config:
-        :return: A json file that expose the configuration variables loaded on the environment.
+        :return: A json file that expose the configuration variables loaded
+        on the environment.
         """
-        return json.dumps(
-            {
-                "app":
-                    {
-                        "environ": config.to_json(config)
-                    }
-            }
-        )
+        return json.dumps({"app": {"environ": config.to_json(config)}})
 
 
 def add_database_creation_endpoint(app, database):
@@ -151,10 +150,11 @@ def add_database_creation_endpoint(app, database):
     """
     basic_auth = BasicAuth(app)
 
-    # Create a unique endpoint that will be used to initialze the database with the proper tables.
+    # Create a unique endpoint that will be used to initialze the database
+    # with the proper tables.
     @app.route("/_init_db", methods=["POST"])
     @basic_auth.required
-    def init_db(): # pylint: disable=unused-variable
+    def init_db():  # pylint: disable=unused-variable
         """
         Endpoint that Initialize the database.
 
@@ -177,7 +177,8 @@ def _create_database(config, database):
     :param database: the database object to be used
     :return: None
     """
-    engine = database.create_engine(config["SQLALCHEMY_DATABASE_URI"])
+    print(config)
+    engine = database.create_engine(config["SQLALCHEMY_DATABASE_URI"], engine_opts={})
     conn = engine.connect()
     conn.execute("commit")
     conn.execute(f"create database{config['DATABASE']}")
@@ -191,14 +192,17 @@ def add_index_endpoint(app):
     :param app:
     :return: None
     """
+
     @app.route("/")
-    def index():    # pylint: disable=unused-variable
+    def index():  # pylint: disable=unused-variable
         """
         Index endopoint.
 
-        :return: the content of the index.html file to be used on the index of the project.
+        :return: the content of the index.html file to be used on the index
+        of the project.
         """
-        return open(path.join(path.dirname(__file__), "index.html")).read()
+        return open(path.join(path.dirname(__file__), "index.html"),
+                    encoding="UTF-8").read()
 
 
 def format_value(number):
