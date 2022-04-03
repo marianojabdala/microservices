@@ -44,6 +44,6 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
                 - development
 
