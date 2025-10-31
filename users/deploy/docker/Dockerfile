@@ -39,7 +39,7 @@ WORKDIR /app
 COPY . /app/users
 
 RUN rm -rf /app/users/{pyproject.toml,poetry.lock,Makefile,deploy} \
-    && find /app /opt/venv -type d -name "__pycache__" -print0 | xargs -0 rm -rf 2>/dev/null+ \
+    && find /app /opt/venv -type d -name "__pycache__" -print0 | xargs -0 rm -rf 2>/dev/null \
     && rm -rf /root/.cache /var/cache/*
 
 USER 1001
