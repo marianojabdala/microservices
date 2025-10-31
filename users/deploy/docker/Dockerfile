@@ -1,55 +1,48 @@
+# ---------- Stage 1: Builder ----------
+FROM python:3.9-slim-bookworm AS builder
 
-FROM python:3.9-slim as build-base
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    POETRY_VERSION=2.2.1 \
+    VENV_PATH=/opt/venv
 
-LABEL maintainer="marianoabdala@gmail.com"
-LABEL user.microservice.version="0.1.0"
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        gcc make build-essential curl \
+    && python -m venv --copies $VENV_PATH \
+    && $VENV_PATH/bin/pip install --upgrade pip \
+    && $VENV_PATH/bin/pip install "poetry==$POETRY_VERSION" poetry-plugin-export \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt update && apt install -y --no-install-recommends gcc make wget python3-dev && \
-    python -m venv --copies /opt/venv && \
-    pip install pip --upgrade && \
-    pip install poetry
+ENV PATH="$VENV_PATH/bin:$PATH"
+WORKDIR /build
 
-ENV PATH="/opt/venv/bin:$PATH"
+COPY pyproject.toml poetry.lock* ./
 
-FROM build-base AS intermediate-build
+RUN poetry export -f requirements.txt --without-hashes -o requirements.txt && \
+    pip install --no-cache-dir -r requirements.txt && \
+    rm -rf /root/.cache
 
-COPY pyproject.toml /tmp
+# ---------- Stage 2: Runtime ----------
+FROM python:3.9-slim-bookworm AS runtime
 
-SHELL ["/bin/bash", "-c"]
+COPY --from=builder /opt/venv /opt/venv
 
-RUN cd /tmp && \
-    poetry export -o requirements.txt --without-hashes && \
-    chmod +x /opt/venv/bin/activate && \
-    source /opt/venv/bin/activate && pip install -r requirements.txt && \
-    rm /tmp/pyproject.toml && \
-    find / -name "__pycache__" | xargs rm -fr
+ENV PATH="/opt/venv/bin:$PATH" \
+    PYTHONPATH="/app" \
+    APP_SETTINGS=production
 
-FROM python:3.9.6-slim as release-image
-
-COPY --from=intermediate-build /opt/venv /opt/venv
-
-COPY . /app/users
-
-ARG APP_SETTINGS=production
-
-RUN mkdir -p /var/log/app/ && \
-    addgroup --system appgroup  && \
-    adduser --system app --no-create-home && usermod -aG appgroup app && \
-    chown app:appgroup -R /app && \
-    chown app:appgroup -R /var/log/app/ && \
-    rm -fr /app/users/deploy  && \
-    rm -fr /app/users/poetry.lock /app/users/pyproject.toml /app/users/Makefile && \
-    rm -fr /root/.cache /root/.local /var/cache/ && \
-    find / -name "__pycache__" | xargs rm -fr
-
-ENV APP_SETTINGS=$APP_SETTINGS \
-    PATH="/opt/venv/bin:/app:/app/users:$PATH" \
-    PYTHONPATH="../"
+RUN mkdir -p /app /var/log/app && \
+    chmod -R g+rwX /app /var/log/app /opt/venv && \
+    chgrp -R 0 /app /var/log/app /opt/venv
 
 WORKDIR /app
+COPY . /app/users
 
-USER app
+RUN rm -rf /app/users/{pyproject.toml,poetry.lock,Makefile,deploy} \
+    && find / -type d -name "__pycache__" -exec rm -rf {} + \
+    && rm -rf /root/.cache /var/cache/*
+
+USER 1001
 
 EXPOSE 8000
-
-ENTRYPOINT ["/opt/venv/bin/gunicorn" ,"--config", "/app/users/config.py", "users.app:APP"]
+ENTRYPOINT ["gunicorn", "--config", "/app/users/config.py", "users.app:APP"]
